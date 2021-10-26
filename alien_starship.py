@@ -8,8 +8,6 @@ from simpleai.search import (
 )
 from simpleai.search.viewers import WebViewer, BaseViewer, ConsoleViewer
 
-from hnefatafl import SOLDIERS
-
 INITIAL_STATE = (0,0,0)
 GOAL_STATE = (5,1,8)
 
@@ -65,14 +63,31 @@ class AlienStarshipProblem(SearchProblem):
     def cost(self, state, action, state2):
         return 1
 
-my_viewer = BaseViewer()
-problem = AlienStarshipProblem(INITIAL_STATE)
-result = astar(problem, graph_search=True, viewer=my_viewer)
+    def heuristic(self, state):
+        return 3
 
-print("Goal node:", result)
-print("Path from initial state to goal:")
-for action, state in result.path():
-    print("Action:", action)
-    print("State:", state)
-    
-print("Stats:", my_viewer.stats)
+METHODS = (
+    #breadth_first,
+    depth_first,
+    #uniform_cost,
+    greedy,
+    astar
+)    
+        
+for search_algorithm in METHODS:
+    print()
+    print('=' * 50)
+    print("Running:", search_algorithm)
+    visor = BaseViewer()
+    problem = AlienStarshipProblem(INITIAL_STATE)
+    result = search_algorithm(problem, graph_search = True, viewer = visor)
+    print ('Final State:', result.state)
+    print('=' * 50)
+    print(' - Statistics:')
+    print(' - Amount of actions until goal:', len(result.path()))
+    print(' - Raw data:', visor.stats)
+    '''
+    for action, state in result.path():
+        print("   - Action:", action)
+        print("   - Resulting State:", state)
+    '''

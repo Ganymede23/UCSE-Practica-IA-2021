@@ -76,20 +76,49 @@ class RatabotsProblem(SearchProblem):
         
         state = tuple(state)
 
-        print(state)
+        #print(state)
 
         return state
 
     def cost(self, state, action, state2):
         return 1
 
-#my_viewer = ConsoleViewer()
-problem = RatabotsProblem(INITIAL_STATE)
-result = astar(problem, graph_search=True)
-print("Goal node:", result)
+    def heuristic(self, state):
+        # Heuristica: Cantidad de comidas+1
+        # {'max_fringe_size': 11, 'visited_nodes': 124, 'iterations': 124}
+        
+        pos, meals = state
+        if (pos in ENTRANCE) and (len(meals) == 0):
+            return 0
+        else:
+            return len(meals)+1
 
-print("Path from initial state to goal:")
-for action, state in result.path():
-    print("Action:", action)
-    print("State:", state)
-    
+        # Sin heurística:
+        # {'max_fringe_size': 11, 'visited_nodes': 134, 'iterations': 134}
+        # return super().heuristic(state)
+
+METHODS = (
+    breadth_first,
+    depth_first,
+    uniform_cost,
+    greedy,
+    astar
+)    
+        
+for search_algorithm in METHODS:
+    print()
+    print('=' * 50)
+    print("Running:", search_algorithm)
+    visor = BaseViewer()
+    problem = RatabotsProblem(INITIAL_STATE)
+    result = search_algorithm(problem, graph_search = True, viewer = visor)
+    print ('Final State:', result.state)
+    print('=' * 50)
+    print(' - Statistics:')
+    print(' - Amount of actions until goal:', len(result.path()))
+    print(' - Raw data:', visor.stats)
+    '''
+    for action, state in result.path():
+        print("   - Action:", action)
+        print("   - Resulting State:", state)
+    '''

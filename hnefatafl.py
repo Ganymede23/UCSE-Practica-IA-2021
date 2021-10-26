@@ -71,14 +71,41 @@ class HnefataflProblem(SearchProblem):
     def cost(self, state, action, state2):
         return 1
 
-my_viewer = BaseViewer()
-problem = HnefataflProblem(INITIAL_STATE)
-result = astar(problem, graph_search=True, viewer=my_viewer)
+    def heuristic(self, state):
+        # return 1
+        king_row, king_col = state
+        king_pos = (king_row, king_col)
+        # (3,3)
+        min_distance_right =  6 - king_col
+        min_distance_left = king_col            # == king_col - 0
+        min_distance_top = king_row             # == king_row - 0
+        min_distance_botton = 6 - king_row
+        min_distance = min(list((min_distance_right,min_distance_left,min_distance_top,min_distance_botton)))
+        return(min_distance)
 
-print("Goal node:", result)
-print("Path from initial state to goal:")
-for action, state in result.path():
-    print("Action:", action)
-    print("State:", state)
-    
-print("Stats:", my_viewer.stats)
+
+METHODS = (
+    breadth_first,
+    depth_first,
+    uniform_cost,
+    greedy,
+    astar
+)    
+        
+for search_algorithm in METHODS:
+    print()
+    print('=' * 50)
+    print("Running:", search_algorithm)
+    visor = BaseViewer()
+    problem = HnefataflProblem(INITIAL_STATE)
+    result = search_algorithm(problem, graph_search = True, viewer = visor)
+    print ('Final State:', result.state)
+    print('=' * 50)
+    print(' - Statistics:')
+    print(' - Amount of actions until goal:', len(result.path()))
+    print(' - Raw data:', visor.stats)
+    '''
+    for action, state in result.path():
+        print("   - Action:", action)
+        print("   - Resulting State:", state)
+    '''
