@@ -71,12 +71,14 @@ class HnefataflProblem(SearchProblem):
     def cost(self, state, action, state2):
         return 1
 
-#my_viewer = ConsoleViewer()
+my_viewer = BaseViewer()
 problem = HnefataflProblem(INITIAL_STATE)
-result = astar(problem, graph_search=True)
+result = astar(problem, graph_search=True, viewer=my_viewer)
 
 print("Goal node:", result)
 print("Path from initial state to goal:")
 for action, state in result.path():
     print("Action:", action)
     print("State:", state)
+    
+print("Stats:", my_viewer.stats)
