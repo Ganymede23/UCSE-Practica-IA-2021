@@ -64,7 +64,23 @@ class AlienStarshipProblem(SearchProblem):
         return 1
 
     def heuristic(self, state):
-        return 3
+        # Sin heuristica
+        # return super().heuristic(state)
+        # {'max_fringe_size': 126, 'visited_nodes': 908, 'iterations': 908}
+
+        # Heuristica: cantidad de casillas que faltan para llegar al goal
+        # {'max_fringe_size': 146, 'visited_nodes': 724, 'iterations': 724}
+        value1, value2, value3 = state
+        goal1, goal2, goal3 = GOAL_STATE
+        x = 0
+        if value1 != goal1:
+            x += 1
+        if value2 != goal2:
+            x += 1
+        if value3 != goal3:
+            x += 1
+        
+        return x
 
 METHODS = (
     #breadth_first,
