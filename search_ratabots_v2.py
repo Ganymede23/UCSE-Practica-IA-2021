@@ -84,8 +84,6 @@ class RatabotsProblem(SearchProblem):
         bot_pos, meal_list = state
         return len(meal_list)+1
 
-
-
 METHODS = (
     breadth_first,
     depth_first,

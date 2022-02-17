@@ -64,8 +64,44 @@ class DefensiveRobotsProblem(SearchProblem):
     def cost(self, state, action, state2):
         return 1
 
-#my_viewer = ConsoleViewer()
-problem = DefensiveRobotsProblem(INITIAL_STATE)
-result = astar(problem, graph_search=True)
-print(result)
-    
+    def heuristic(self, state):
+        # Without heuristic
+        # {'max_fringe_size': 46, 'visited_nodes': 235, 'iterations': 235}
+        # return super().heuristic(state)
+
+        # Difference between spawn point and one of the defensive positions
+        # {'max_fringe_size': 59, 'visited_nodes': 174, 'iterations': 174}
+        pos1, pos2 = state
+        pos1_row, pos1_col = pos1
+        pos2_row, pos2_col = pos2
+        def1, def2 = ENTRADAS
+        def1_row, def1_col = def1
+        def2_row, def2_col = def2
+        
+        return abs(pos1_row - def1_row) + abs(pos1_col - def1_col)
+        
+METHODS = (
+    breadth_first,
+    depth_first,
+    uniform_cost,
+    greedy,
+    astar
+)    
+        
+for search_algorithm in METHODS:
+    print()
+    print('=' * 50)
+    print("Running:", search_algorithm)
+    visor = BaseViewer()
+    problem = DefensiveRobotsProblem(INITIAL_STATE)
+    result = search_algorithm(problem, graph_search = True, viewer = visor)
+    print ('Final State:', result.state)
+    print('=' * 50)
+    print(' - Statistics:')
+    print(' - Amount of actions until goal:', len(result.path()))
+    print(' - Raw data:', visor.stats)
+    '''
+    for action, state in result.path():
+        print("   - Action:", action)
+        print("   - Resulting State:", state)
+    '''
